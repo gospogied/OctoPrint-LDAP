@@ -74,10 +74,11 @@ class LDAPConnection(DependentOnSettingsPlugin):
 
         ou_filter = self.settings.get([OU_FILTER])
         ou_member_filter = self.settings.get([OU_MEMBER_FILTER])
+        short_dn=dn.split(",",1)
         for ou_common_name in str(ou_common_names).split(","):
             result = self.search("(&" +
-                                 "(" + ou_filter % ou_common_name.strip() + ")" +
-                                 "(" + (ou_member_filter % dn) + ")" +
+                                 "(" + short_dn[0] + ")" +
+                                 "(" + (ou_member_filter % ou_filter % ou_common_name.strip()) + ")" +
                                  ")")
             if result is not None and result[DISTINGUISHED_NAME] is not None:
                 self.logger.debug("%s is a member of %s" % (dn, result[DISTINGUISHED_NAME]))
